@@ -1,0 +1,33 @@
+{
+  "manifest_version": 2,
+  "name": "Scripter",
+  "description": "Save and automatically run bookmarklets",
+  "version": "0.5",
+  "content_scripts": [
+    {
+        "matches": ["<all_urls>"],
+        "js": ["js/scripter.js"]
+    }
+  ],
+  "background": {
+    "scripts": ["js/background.js"]
+  },
+  "icons": {
+    "16": "images/16.png",
+    "48": "images/48.png",
+    "128": "images/128.png"      
+  },
+  "browser_action": {
+    "name": "Scripter",
+    "default_popup": "popup.html",
+    "default_icon": "images/48.png"
+  },
+  "options_page": "options.html",
+  "permissions": [
+    "tabs",
+    "http://*/*",
+    "storage",
+    "https://*/*",
+    "contextMenus"
+  ]
+}

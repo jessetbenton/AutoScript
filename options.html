@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+   <head>
+      <title>Scripter</title>
+      <style>
+         #scripts {
+            display: table;
+         }
+         .script {
+            display: table-row;
+            max-height: 20px;
+         }
+         .enabled, .name, .activeURLs, .code {
+            display: table-cell;
+            padding: 5px;
+         }
+         .name {
+            width: 20px;
+         }
+         .code {
+            width: 500px;
+         }
+         .enabled {
+            width: 5px;
+         }
+         .activeURLs {
+            width: 100px;
+         }
+      </style>
+      <link rel="stylesheet" href="codemirror-4.5/lib/codemirror.css">
+      <link rel="stylesheet" href="codemirror-4.5/theme/monokai.css">
+      <script src="codemirror-4.5/lib/codemirror.js"></script>
+      <script src="codemirror-4.5/mode/javascript/javascript.js"></script>
+      <script src="js/options.js"></script>
+   </head>
+   <body>
+      <div>
+         <button id="add">Add Script</div>
+      </div>
+      <div id="scripts">
+         <div class="script">
+            <div class="name">Name</div>
+            <div class="enabled">Enabled</div>
+            <div class="activeURLs">Active URLs</div>
+            <div class="code minimized">Code</div>
+         </div>
+      </div>
+      
+   </body>
+</html>
