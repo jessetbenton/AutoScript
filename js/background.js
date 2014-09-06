@@ -25,7 +25,7 @@ chrome.runtime.onMessage.addListener(
 );
 
 chrome.contextMenus.create({
-  "title": "Scripter Options",
+  "title": "AutoScript Options",
   "contexts":["all"],
   "onclick": function() {chrome.tabs.create({'url': 'options.html'});}
 });

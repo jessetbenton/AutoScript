@@ -1,6 +1,6 @@
 {
   "manifest_version": 2,
-  "name": "Scripter",
+  "name": "AutoScript",
   "description": "Save and automatically run bookmarklets",
   "version": "0.5",
   "content_scripts": [
@@ -18,7 +18,7 @@
     "128": "images/128.png"      
   },
   "browser_action": {
-    "name": "Scripter",
+    "name": "AutoScript",
     "default_popup": "popup.html",
     "default_icon": "images/48.png"
   },
