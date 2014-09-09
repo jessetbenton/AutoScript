@@ -20,76 +20,98 @@ function addScript(event) {
    chrome.tabs.create({'url': 'edit.html'});
 }
 
+function removeButtons(parent) {
+   parent.children[6].remove();
+   parent.children[5].remove();
+}
+
 function minimizeCode(index) {
    mirrors[index].setSize(null, 20);
    var parent = document.getElementById(index);
    parent.children[3].classList.add("minimized");
-   console.log(parent.children.length);
-   console.log(mirrors[index].changed);
    if(parent.children.length > 5 && mirrors[index].changed === false) {
       try {
-         parent.children[6].remove();
-         parent.children[5].remove();
+         removeButtons(parent);
       }
       catch(e) { }
    }   
 }
 
-function mouseover(evt) {
-   var id = evt.target.parentNode.id;
-   if(evt.target.className.indexOf("minimized") !== -1) {
+function mouseover(event) {
+   var id = event.target.parentNode.id;
+   if(event.target.className.indexOf("minimized") !== -1) {
       mirrors[id].setSize(null, "auto");
-      evt.target.classList.remove("minimized");
+      event.target.classList.remove("minimized");
       var scripts = document.getElementsByClassName('maximized');
-      console.dir(scripts);
       for(var i = 0; i < scripts.length; i++) {
          if(i != id) {
             minimizeCode(i);
          }
       }
-      evt.target.classList.add("maximized");
+      event.target.classList.add("maximized");
    }
 }
 
-function save(evt) {
-   var json, index, parent;
-   if(evt.type === 'click') {
-      index = evt.target.parentNode.id;
+function save(event) {
+   var index, parent, name, script, code;
+   if(event.type === 'click') {
+      index = event.target.parentNode.id;
       parent = document.getElementById(index);
-      json = getJSON(index);
-      json.enabled = parent.children[1].firstChild.checked;
-      json.code = mirrors[index].getValue();
+      name = parent.firstChild.innerHTML;
+      chrome.runtime.sendMessage({ message: "getScript", name: name }, function(response) {
+         var script = response.script;
+         script.code = mirrors[index].getValue();
+         //TODO: update active urls
+         chrome.runtime.sendMessage({ message: "save", override: true, obj: response.script }, function(response) {
+            if(!response.error) {
+               minimizeCode(index);
+               removeButtons(parent);
+               mirrors[index].changed = false;
+            }
+         });
+      });
    }
-   else if(evt.type === 'change') {
-      index = evt.target.parentNode.parentNode.id;
-      json = getJSON(index);
+   else if(event.type === 'change') {
+      index = event.target.parentNode.parentNode.id;
       parent = document.getElementById(index);
-      json.enabled = parent.children[1].firstChild.checked;
-   }
-   mirrors[index].changed = false;
-   localStorage[json.name] = JSON.stringify(json);
-   minimizeCode(index);
+      name = parent.firstChild.innerHTML;
+      chrome.runtime.sendMessage({ message: "toggleScript", name: name });
+   }   
 }
 
-function cancel(evt) {
-   var name = evt.target.parentNode.children[0].innerHTML;
-   var json = JSON.parse(localStorage[name]);
-   var index = evt.target.parentNode.id;
-   mirrors[index].changed = false;
-   mirrors[index].setValue(json.code);
-   minimizeCode(index);
+function cancel(event) {
+   var name = event.target.parentNode.children[0].innerHTML;
+   chrome.runtime.sendMessage({ message: "getScript", name: name }, function(response) {
+      var json = response.script;
+      var index = event.target.parentNode.id;
+      mirrors[index].changed = false;
+      mirrors[index].setValue(json.code);
+      minimizeCode(index);
+   });
 }
 
 function getJSON(index) {
    var script = document.getElementById(index);
-   return JSON.parse(localStorage[script.children[0].innerHTML]);
+   var name = script.children[0].innerHTML;
+   chrome.runtime.sendMessage({ message: "getScript", name: name }, function(response) {
+      var json = undefined;
+      if(!response.error) {
+         console.log("no error");
+         json = response.script;
+      }
+      console.debug(json);
+      return json;
+   });
 }
 
 function del(event) {
    var index = event.target.parentNode.id;
    var name = document.getElementById(index).firstChild.innerHTML;
-   localStorage.removeItem(name);
-   document.getElementById(index).remove();
+   chrome.runtime.sendMessage({ message: "delete", name: name }, function(response) {   
+      if(!response.error) {
+         document.getElementById(index).remove();
+      }
+   });
 }
 
 var scripts, scriptDiv, enabledDiv, nameDiv, activeDiv, codeDiv, checkbox;
