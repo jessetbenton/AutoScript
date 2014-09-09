@@ -25,7 +25,7 @@ function save(event) {
    script.name = document.getElementById('name').value;
    script.enabled = document.getElementById('enabled').checked;
    script.code = myCodeMirror.getValue();
-   script.activeURLs = [];
+   script.activeURLs = "";
 
    if (script.name !== '' && script.code !== '') {
       console.log("here");
@@ -48,7 +48,6 @@ function del(event) {
    }
    catch (e) {}
 }
-
 
 function addEventListeners() {
    saveBtn = document.getElementById('save');

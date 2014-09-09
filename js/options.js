@@ -20,6 +20,29 @@ function addScript(event) {
    chrome.tabs.create({'url': 'edit.html'});
 }
 
+function addButtons(event) {
+   var index, parent;
+   if(typeof event === "object") {
+      index = event.target.parentElement.parentElement.parentElement.id;
+   }
+   else {
+      index = event;
+   }
+
+   parent = document.getElementById(index);   
+   if(parent.children.length < 6) {
+      var saveBtn = document.createElement('button');
+      saveBtn.onclick = save;
+      saveBtn.innerHTML = "Save";
+      var cancelBtn = document.createElement('button');
+      cancelBtn.onclick = cancel;
+      cancelBtn.innerHTML = "Cancel";
+      mirrors[index].changed = true;
+      document.getElementById(index).appendChild(saveBtn);
+      document.getElementById(index).appendChild(cancelBtn);
+   }
+}
+
 function removeButtons(parent) {
    parent.children[6].remove();
    parent.children[5].remove();
@@ -53,7 +76,7 @@ function mouseover(event) {
 }
 
 function save(event) {
-   var index, parent, name, script, code;
+   var index, parent, name, script, code, urls;
    if(event.type === 'click') {
       index = event.target.parentNode.id;
       parent = document.getElementById(index);
@@ -61,7 +84,7 @@ function save(event) {
       chrome.runtime.sendMessage({ message: "getScript", name: name }, function(response) {
          var script = response.script;
          script.code = mirrors[index].getValue();
-         //TODO: update active urls
+         script.activeURLs = document.getElementById(index).children[2].firstChild.firstChild.value;
          chrome.runtime.sendMessage({ message: "save", override: true, obj: response.script }, function(response) {
             if(!response.error) {
                minimizeCode(index);
@@ -114,7 +137,7 @@ function del(event) {
    });
 }
 
-var scripts, scriptDiv, enabledDiv, nameDiv, activeDiv, codeDiv, checkbox;
+var scripts, scriptDiv, enabledDiv, nameDiv, activeDiv, codeDiv, checkbox, urlDiv, url;
 var mirrors = [];
 function scriptDisplay(obj) {
    if(scripts === undefined) {
@@ -133,6 +156,15 @@ function scriptDisplay(obj) {
    nameDiv.className = "name";
    activeDiv = document.createElement('div');
    activeDiv.className = "activeURLs";
+
+   urlDiv = document.createElement('div');
+   urlLabel = document.createElement('label');
+   url = document.createElement('input');
+   url.value = obj.activeURLs;
+   url.onchange = addButtons;
+   urlDiv.appendChild(url);
+   activeDiv.appendChild(urlDiv);
+
    codeDiv = document.createElement('div');
    codeDiv.className = "code minimized";
    scriptDiv.id = count;
@@ -162,17 +194,18 @@ function scriptDisplay(obj) {
    mirrors[count].setSize(null, 20);
    mirrors[count].index = count;
    mirrors[count].on("change", function(cm, changed) {
-      var parent = document.getElementById(cm.index);
-      if(parent.children.length < 6) {
-         var saveBtn = document.createElement('button');
-         saveBtn.onclick = save;
-         saveBtn.innerHTML = "Save";
-         var cancelBtn = document.createElement('button');
-         cancelBtn.onclick = cancel;
-         cancelBtn.innerHTML = "Cancel";
-         mirrors[cm.index].changed = true;
-         document.getElementById(cm.index).appendChild(saveBtn);
-         document.getElementById(cm.index).appendChild(cancelBtn);
-      }
+      addButtons(cm.index);
+      // var parent = document.getElementById(cm.index);
+      // if(parent.children.length < 6) {
+      //    var saveBtn = document.createElement('button');
+      //    saveBtn.onclick = save;
+      //    saveBtn.innerHTML = "Save";
+      //    var cancelBtn = document.createElement('button');
+      //    cancelBtn.onclick = cancel;
+      //    cancelBtn.innerHTML = "Cancel";
+      //    mirrors[cm.index].changed = true;
+      //    document.getElementById(cm.index).appendChild(saveBtn);
+      //    document.getElementById(cm.index).appendChild(cancelBtn);
+      // }
    });
 }

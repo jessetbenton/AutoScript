@@ -5,7 +5,7 @@ document.onreadystatechange = function() {
     });
     var host = window.location.hostname;
     var path = window.location.pathname;
-    console.log(host + path);
+    var url = host + path;
     chrome.runtime.sendMessage({ message: "getAllScripts" }, function (response) {
       var rawScripts = response.scripts;
       var scripts = [];
@@ -14,7 +14,10 @@ document.onreadystatechange = function() {
         json = JSON.parse(rawScripts[s]);
         scripts.push(json);
         if(json.enabled) {
-          appendScript(json);
+          var regex = new RegExp(json.activeURLs);
+          if(url.match(regex)) {
+            appendScript(json);  
+          }          
         }
       }
     });
