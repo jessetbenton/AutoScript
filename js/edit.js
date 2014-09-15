@@ -16,6 +16,7 @@ function init() {
       myCodeMirror.setValue(json.code);
       document.getElementById('name').value = json.name;
       document.getElementById('enabled').checked = json.enabled;
+      document.getElementById('ActiveURLs').value = json.activeURLs;
    }
    catch(e) {}
 }
@@ -25,7 +26,7 @@ function save(event) {
    script.name = document.getElementById('name').value;
    script.enabled = document.getElementById('enabled').checked;
    script.code = myCodeMirror.getValue();
-   script.activeURLs = "";
+   script.activeURLs = document.getElementById('ActiveURLs').value;
 
    if (script.name !== '' && script.code !== '') {
       console.log("here");

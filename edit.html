@@ -13,6 +13,9 @@
         min-height: 300px;
         width: 98%;
       }
+      #ActiveURLs {
+        width: 250px;
+      }
       .CodeMirror {
         border: 1px solid lightgray;
       }
@@ -32,7 +35,12 @@
         <tr>
           <td>
             <input type="text" id="name" placeholder="Name"/>
-            <input type="checkbox" id="enabled"/>enabled</label>
+            <input type="checkbox" id="enabled"/>enabled
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <input type="text" placeholder="regex" id="ActiveURLs"/>
           </td>
         </tr>
         <tr>
