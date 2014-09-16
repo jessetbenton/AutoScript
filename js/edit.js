@@ -10,13 +10,14 @@ document.onreadystatechange = function() {
 function init() {
    var json;
    try {
-      //get param
-      var name = window.location.search.substring(4);
-      json = JSON.parse(localStorage[name]);
-      myCodeMirror.setValue(json.code);
-      document.getElementById('name').value = json.name;
-      document.getElementById('enabled').checked = json.enabled;
-      document.getElementById('ActiveURLs').value = json.activeURLs;
+      if(window.location.search !== '') {
+         var name = window.location.search.substring(4);
+         json = JSON.parse(localStorage[name]);
+         document.getElementById('name').value = json.name;
+         document.getElementById('enabled').checked = json.enabled;
+         document.getElementById('ActiveURLs').value = json.activeURLs;
+         myCodeMirror.setValue(json.code);
+      }      
    }
    catch(e) {}
 }
