@@ -10,8 +10,8 @@ document.onreadystatechange = function() {
 function init() {
    var json;
    try {
-      var name = localStorage['edit']
-      localStorage.removeItem('edit');
+      //get param
+      var name = window.location.search.substring(4);
       json = JSON.parse(localStorage[name]);
       myCodeMirror.setValue(json.code);
       document.getElementById('name').value = json.name;
@@ -23,13 +23,12 @@ function init() {
 
 function save(event) {
    var script = {};
-   script.name = document.getElementById('name').value;
+   script.name = (document.getElementById('name').value).replace(/ /g,'_');
    script.enabled = document.getElementById('enabled').checked;
    script.code = myCodeMirror.getValue();
    script.activeURLs = document.getElementById('ActiveURLs').value;
 
    if (script.name !== '' && script.code !== '') {
-      console.log("here");
       localStorage[script.name] = JSON.stringify(script);
       closeTab();
    }

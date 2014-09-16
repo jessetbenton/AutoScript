@@ -21,8 +21,6 @@ chrome.runtime.onMessage.addListener(
           sendResponse({error: false, message: "success", scripts: localStorage});
           break;
         case "getScript":
-          console.log("requesting: " + request.name);
-          console.debug(JSON.parse(localStorage[request.name]));
           sendResponse({error: false, script: JSON.parse(localStorage[request.name])})
           break;
         case "toggleScript":

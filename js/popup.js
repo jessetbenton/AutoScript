@@ -5,9 +5,18 @@ document.onreadystatechange = function() {
    }
 }
 
+function toggleScript(event) {
+   var name = event.target.id;
+   chrome.runtime.sendMessage({ message: "toggleScript", name: name }, function(response) {
+      if(response.error) {
+         console.log("an error has occurred");
+      }
+   });
+}
+
 function init() {
    var container = document.querySelector("div#container");
-   var div, input, label, button, script;
+   var div, input, label, button, script, addBtn;
    var count = 0;
    chrome.runtime.sendMessage({ message: "getAllScripts" }, function(response) {
       for(s in response.scripts) {
@@ -30,37 +39,14 @@ function init() {
          div.appendChild(button);
          container.appendChild(div);
          document.querySelector('#' + script.name).checked = script.enabled;
+         document.getElementById(script.name).onchange = toggleScript;
          count++;
       }
       if(container.children.length === 0) {
          container.innerHTML = "No Scripts Added";
       }
-      addEventListeners();
-   });
-}
-
-function addEventListeners() {
-   saveBtn = document.getElementById('save');
-   cancelBtn = document.getElementById('cancel');
-   addBtn = document.getElementById('addBtn');
-
-   saveBtn.onclick = save;
-   cancelBtn.onclick = cancel;
-   addBtn.onclick = toggleAdd;
-
-   var checkBoxes = document.getElementsByClassName('scriptCheckBox');
-   for(var i = 0; i < checkBoxes.length; i++) {
-      var name = checkBoxes[i].id;
-      checkBoxes[i].onchange = toggleScript;
-   }
-}
-
-function toggleScript(event) {
-   var name = event.target.id;
-   chrome.runtime.sendMessage({ message: "toggleScript", name: name }, function(response) {
-      if(response.error) {
-         console.log("an error has occurred");
-      }
+      addBtn = document.getElementById('addBtn');
+      addBtn.onclick = toggleAdd;
    });
 }
 
@@ -70,6 +56,5 @@ function toggleAdd(event) {
 
 function edit(event) {
    var name = event.target.parentNode.id.replace("_SCRIPTER","");
-   localStorage['edit'] = name;
-   chrome.tabs.create({'url': 'edit.html'});
+   chrome.tabs.create({'url': 'edit.html?id=' + name});
 }

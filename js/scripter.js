@@ -1,8 +1,6 @@
 document.onreadystatechange = function() {
   if(document.readyState === "complete") {
-    chrome.runtime.sendMessage({ message: "updateContextMenu" }, function (response) {
-      // console.debug(response);
-    });
+    chrome.runtime.sendMessage({ message: "updateContextMenu" });
     var host = window.location.hostname;
     var path = window.location.pathname;
     var url = host + path;

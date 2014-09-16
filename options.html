@@ -10,15 +10,12 @@
             display: table-row;
             max-height: 20px;
          }
-         .enabled, .name, .activeURLs, .code {
+         .enabled, .name, .activeURLs {
             display: table-cell;
             padding: 5px;
          }
          .name {
             width: 20px;
-         }
-         .code {
-            width: 500px;
          }
          .enabled {
             width: 5px;
@@ -30,10 +27,6 @@
             width: 100%;
          }
       </style>
-      <link rel="stylesheet" href="codemirror-4.5/lib/codemirror.css">
-      <link rel="stylesheet" href="codemirror-4.5/theme/monokai.css">
-      <script src="codemirror-4.5/lib/codemirror.js"></script>
-      <script src="codemirror-4.5/mode/javascript/javascript.js"></script>
       <script src="js/options.js"></script>
    </head>
    <body>
@@ -45,7 +38,6 @@
             <div class="name">Name</div>
             <div class="enabled">Enabled</div>
             <div class="activeURLs">Active URLs</div>
-            <div class="code minimized">Code</div>
          </div>
       </div>
    </body>
