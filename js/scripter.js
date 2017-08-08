@@ -1,9 +1,7 @@
 document.onreadystatechange = function() {
   if(document.readyState === "complete") {
     chrome.runtime.sendMessage({ message: "updateContextMenu" });
-    var host = window.location.hostname;
-    var path = window.location.pathname;
-    var url = host + path;
+    var url = window.location.href;
     chrome.runtime.sendMessage({ message: "getAllScripts" }, function (response) {
       var rawScripts = response.scripts;
       var scripts = [];
@@ -13,7 +11,7 @@ document.onreadystatechange = function() {
         scripts.push(json);
         if(json.enabled) {
           var regex = new RegExp(json.activeURLs);
-          if(url.match(regex)) {
+          if(regex.test(url)) {
             appendScript(json);  
           }          
         }
