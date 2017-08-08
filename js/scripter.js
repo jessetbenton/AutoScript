@@ -11,7 +11,7 @@ document.onreadystatechange = function() {
         scripts.push(json);
         if(json.enabled) {
           var regex = new RegExp(json.activeURLs);
-          if(url.match(regex)) {
+          if(regex.test(url)) {
             appendScript(json);  
           }          
         }
